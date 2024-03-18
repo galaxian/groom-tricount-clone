@@ -3,6 +3,7 @@ package com.example.tricountclone.settlement.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +24,11 @@ public class SettlementController {
 	public ResponseEntity<Void> createSettlement(@RequestBody CreateSettlementReqDto reqDto) {
 		settlementService.createSettlement(reqDto, MemberContext.getCurrentMember());
 		return ResponseEntity.created(URI.create("/settlements")).build();
+	}
+
+	@PostMapping("/settlements/{id}")
+	public ResponseEntity<Void> joinSettlement(@PathVariable("id") Long settlementId) {
+		settlementService.joinSettlement(settlementId, MemberContext.getCurrentMember());
+		return ResponseEntity.created(URI.create("/settlements/" + settlementId)).build();
 	}
 }
