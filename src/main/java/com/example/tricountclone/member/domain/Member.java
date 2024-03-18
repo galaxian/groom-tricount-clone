@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member {
 
@@ -22,4 +25,14 @@ public class Member {
 
 	@Column(nullable = false, unique = true)
 	private String nickname;
+
+	@Column(nullable = false)
+	private String salt;
+
+	public Member(String identifier, String encryptedPassword, String nickname, String salt) {
+		this.identifier = identifier;
+		this.encryptedPassword = encryptedPassword;
+		this.nickname = nickname;
+		this.salt = salt;
+	}
 }
