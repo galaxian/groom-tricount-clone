@@ -1,18 +1,16 @@
 package com.example.tricountclone.settlement.domain;
 
-import java.util.List;
-
 import com.example.tricountclone.common.BaseEntity;
-import com.example.tricountclone.member.domain.Member;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class Settlement extends BaseEntity {
@@ -23,6 +21,7 @@ public class Settlement extends BaseEntity {
 
 	private String name;
 
-	@OneToMany(mappedBy = "id")
-	private List<Member> memberList;
+	public Settlement(String name) {
+		this.name = name;
+	}
 }
