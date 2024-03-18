@@ -3,6 +3,7 @@ package com.example.tricountclone.expense.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tricountclone.expense.domain.Expense;
 import com.example.tricountclone.expense.dto.request.CreateExpenseReqDto;
 import com.example.tricountclone.expense.repository.ExpenseRepository;
 import com.example.tricountclone.member.domain.Member;
@@ -28,5 +29,8 @@ public class ExpenseService {
 		if (!userSettlementRepository.existsByMemberId(member.getId())) {
 			throw new IllegalArgumentException("참여한 정산이 아닙니다.");
 		}
+
+		Expense expense = new Expense(reqDto.getName(), reqDto.getAmount(), member, settlement);
+		expenseRepository.save(expense);
 	}
 }

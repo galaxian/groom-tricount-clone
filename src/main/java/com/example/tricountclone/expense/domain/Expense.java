@@ -33,4 +33,11 @@ public class Expense extends BaseEntity {
 	@JoinColumn(name = "settlement_id")
 	private Settlement settlement;
 
+	public Expense(String name, BigDecimal amount, Member member,
+		Settlement settlement) {
+		this.name = name;
+		this.amount = amount;
+		this.member = member;
+		this.settlement = settlement;
+	}
 }
