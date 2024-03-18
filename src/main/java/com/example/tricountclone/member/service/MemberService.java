@@ -29,12 +29,13 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public void login(LoginReqDto reqDto) {
+	public Long login(LoginReqDto reqDto) {
 		Member member = memberRepository.findMemberByIdentifier(reqDto.getIdentifier())
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
 		if (member.isMatchedPassword(passwordEncoder.encrypt(reqDto.getPassword(), member.getSalt()))) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
+		return member.getId();
 	}
 }

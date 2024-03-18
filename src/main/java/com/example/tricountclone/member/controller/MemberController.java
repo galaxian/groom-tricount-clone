@@ -12,6 +12,8 @@ import com.example.tricountclone.member.dto.request.LoginReqDto;
 import com.example.tricountclone.member.dto.request.SignupReqDto;
 import com.example.tricountclone.member.service.MemberService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -27,8 +29,11 @@ public class MemberController {
 	}
 
 	@GetMapping("/login")
-	public ResponseEntity<Void> login(@RequestBody LoginReqDto reqDto) {
-		memberService.login(reqDto);
+	public ResponseEntity<Void> login(@RequestBody LoginReqDto reqDto, HttpServletResponse response) {
+		Long memberId = memberService.login(reqDto);
+
+		Cookie idCookie = new Cookie("LOGIN_MEMBER_COOKIE", String.valueOf(memberId));
+		response.addCookie(idCookie);
 		return ResponseEntity.created(URI.create("/login")).build();
 	}
 }
