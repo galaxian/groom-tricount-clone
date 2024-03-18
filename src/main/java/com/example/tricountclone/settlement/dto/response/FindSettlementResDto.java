@@ -12,4 +12,10 @@ public class FindSettlementResDto {
 
 	private String name;
 	private List<ExpenseInfoResDto> expenseInfoList;
+
+	public FindSettlementResDto(String name,
+		List<ExpenseInfoResDto> expenseInfoList) {
+		this.name = name;
+		this.expenseInfoList = expenseInfoList;
+	}
 }

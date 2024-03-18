@@ -1,11 +1,16 @@
 package com.example.tricountclone.settlement.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tricountclone.expense.domain.Expense;
+import com.example.tricountclone.expense.repository.ExpenseRepository;
 import com.example.tricountclone.member.domain.Member;
 import com.example.tricountclone.settlement.domain.Settlement;
 import com.example.tricountclone.settlement.dto.reqest.CreateSettlementReqDto;
+import com.example.tricountclone.settlement.dto.response.ExpenseInfoResDto;
 import com.example.tricountclone.settlement.dto.response.FindSettlementResDto;
 import com.example.tricountclone.settlement.repository.SettlementRepository;
 import com.example.tricountclone.userSettlement.domain.UserSettlement;
@@ -19,6 +24,7 @@ public class SettlementService {
 
 	private final SettlementRepository settlementRepository;
 	private final UserSettlementRepository userSettlementRepository;
+	private final ExpenseRepository expenseRepository;
 
 	@Transactional
 	public void createSettlement(CreateSettlementReqDto reqDto, Member member) {
@@ -46,5 +52,11 @@ public class SettlementService {
 		Settlement settlement = settlementRepository.findById(settlementId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 정산입니다."));
 
+		List<Expense> expenseList = expenseRepository.findBySettlementId(settlementId);
+
+		List<ExpenseInfoResDto> infoResDtoList = expenseList.stream()
+			.map(ExpenseInfoResDto::new).toList();
+
+		return new FindSettlementResDto(settlement.getName(), infoResDtoList);
 	}
 }
