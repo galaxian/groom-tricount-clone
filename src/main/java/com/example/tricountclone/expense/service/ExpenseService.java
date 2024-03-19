@@ -27,12 +27,7 @@ public class ExpenseService {
 
 	@Transactional
 	public void createExpense(Long settlementId, CreateExpenseReqDto reqDto, Member member) {
-		Settlement settlement = settlementRepository.findById(settlementId)
-			.orElseThrow(() -> new IllegalArgumentException("정산이 존재하지 않습니다."));
-
-		if (!userSettlementRepository.existsByMemberId(member.getId())) {
-			throw new IllegalArgumentException("참여한 정산이 아닙니다.");
-		}
+		Settlement settlement = validate(settlementId, member);
 
 		Expense expense = new Expense(reqDto.getName(), reqDto.getAmount(), member, settlement);
 		expenseRepository.save(expense);
@@ -40,6 +35,7 @@ public class ExpenseService {
 
 	@Transactional(readOnly = true)
 	public List<GetBalanceResDto> getBalance(Long settlementId, Member member) {
+		validate(settlementId, member);
 
 		List<Expense> expenseList = expenseRepository.findBySettlementId(settlementId);
 		int totalAmount = 0;
@@ -60,5 +56,15 @@ public class ExpenseService {
 		}
 
 		return resDtoList;
+	}
+
+	private Settlement validate(Long settlementId, Member member) {
+		Settlement settlement = settlementRepository.findById(settlementId)
+			.orElseThrow(() -> new IllegalArgumentException("정산이 존재하지 않습니다."));
+
+		if (!userSettlementRepository.existsByMemberId(member.getId())) {
+			throw new IllegalArgumentException("참여한 정산이 아닙니다.");
+		}
+		return settlement;
 	}
 }
