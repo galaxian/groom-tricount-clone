@@ -1,10 +1,13 @@
 package com.example.tricountclone.expense.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tricountclone.expense.domain.Expense;
 import com.example.tricountclone.expense.dto.request.CreateExpenseReqDto;
+import com.example.tricountclone.expense.dto.response.GetBalanceResDto;
 import com.example.tricountclone.expense.repository.ExpenseRepository;
 import com.example.tricountclone.member.domain.Member;
 import com.example.tricountclone.settlement.domain.Settlement;
@@ -32,5 +35,16 @@ public class ExpenseService {
 
 		Expense expense = new Expense(reqDto.getName(), reqDto.getAmount(), member, settlement);
 		expenseRepository.save(expense);
+	}
+
+	@Transactional(readOnly = true)
+	public List<GetBalanceResDto> getBalance(Long settlementId, Member member) {
+
+		List<Expense> expenseList = expenseRepository.findBySettlementId(settlementId);
+		int totalAmount = 0;
+		for (Expense expense : expenseList) {
+			totalAmount = totalAmount + expense.getAmount().intValue();
+		}
+
 	}
 }
