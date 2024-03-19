@@ -1,5 +1,6 @@
 package com.example.tricountclone.expense.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -46,5 +47,18 @@ public class ExpenseService {
 			totalAmount = totalAmount + expense.getAmount().intValue();
 		}
 
+		List<GetBalanceResDto> resDtoList = new ArrayList<>();
+		for (Expense expense : expenseList) {
+			GetBalanceResDto resDto = new GetBalanceResDto(expense, totalAmount);
+			for (Expense expenseAnother : expenseList) {
+				if (expenseAnother.getAmount().intValue() == resDto.getSendAmount()) {
+					resDto.sendMember(expenseAnother);
+					break;
+				}
+			}
+			resDtoList.add(resDto);
+		}
+
+		return resDtoList;
 	}
 }
